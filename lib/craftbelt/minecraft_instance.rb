@@ -40,11 +40,13 @@ module Craftbelt
     end
 
     def to_h(include_paths = [])
-      {
-        root: File.expand_path(root),
-        paths: relative_level_paths + include_paths.select{|p| File.exist?(p) },
-        settings: read_settings
-      }
+      Dir.chdir(root) do
+        {
+          root: root,
+          paths: relative_level_paths + include_paths.select{|p| File.exist?(p) },
+          settings: read_settings
+        }
+      end
     end
 
     def level_dats
@@ -62,7 +64,7 @@ module Craftbelt
     def read_settings
       settings = {}
       begin
-        nbt = NBTFile.read(File.open(level_dats('.').first))
+        nbt = NBTFile.read(File.open(level_dats.first))
         settings = {
           seed: nbt[1]['Data']['RandomSeed'].value.to_s
         }
@@ -89,7 +91,7 @@ module Craftbelt
       Find.find(@initial_root) do |path|
         ROOT_FILES.each do |root_file|
           if path.end_with? root_file
-            return File.dirname(path)
+            return File.expand_path(File.dirname(path))
           end
         end
       end
