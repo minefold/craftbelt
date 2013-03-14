@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    craftbelt (0.0.4)
+    craftbelt (0.0.5)
       nbtfile
 
 GEM
