@@ -2,7 +2,7 @@ require 'find'
 require 'nbtfile'
 
 module Craftbelt
-  class MinecraftInstance
+  class Instance
     attr_reader :root
 
     ROOT_FILES = %w(

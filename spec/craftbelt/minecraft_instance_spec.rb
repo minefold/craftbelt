@@ -1,5 +1,6 @@
 require 'spec_helper'
-require 'craftbelt/minecraft_instance'
+require 'craftbelt/instance'
+require 'fakefs'
 
 module Craftbelt
   describe MinecraftInstance do
@@ -11,6 +12,8 @@ module Craftbelt
         end
       end
     end
+
+    before { FileUtils.mkdir_p('tmp/server')  }
 
     subject { MinecraftInstance.new('.') }
 

@@ -1,2 +1,3 @@
-require 'craftbelt/schema'
+require 'craftbelt/env'
+require 'craftbelt/settings'
 require 'craftbelt/version'

@@ -1,5 +1,5 @@
 module Craftbelt
-  VERSION = '0.0.4'
+  VERSION = '0.0.5'
 
   def self.version
     VERSION

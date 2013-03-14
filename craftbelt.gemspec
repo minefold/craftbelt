@@ -16,7 +16,10 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'nbtfile'
-  gem.add_development_dependency 'rspec'
+  
+  %w(rspec fakefs).each do |dep|
+    gem.add_development_dependency dep
+  end
 
   gem.files = %w(
     Gemfile
