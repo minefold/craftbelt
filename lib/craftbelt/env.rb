@@ -37,7 +37,7 @@ module Craftbelt
       @access ||= begin
         # TODO remove when access policies are standard
         data[:access] || {
-          whitelist: (data['settings']['whitelist'] || '').split
+          whitelist: (data[:settings][:whitelist] || '').split
         }
       end
     end
