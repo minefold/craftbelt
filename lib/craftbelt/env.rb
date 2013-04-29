@@ -7,23 +7,18 @@ module Craftbelt
     def initialize(instance_dir, build_dir, extra_settings={})
       @instance = Craftbelt::Instance.new(instance_dir)
       @build_dir = build_dir
-      vals = data[:settings].merge(
+      vals = settings_raw.merge(
           "name" => data[:name],
           "enable-white-list" => whitelist?,
           "level-name" => (instance.level_paths.first || 'level')
         ).merge(extra_settings)
-        
+
       @settings = Settings.new(schema, vals)
     end
 
     def data
       @data ||= begin
-        data_text = ENV['DATA']
-        if !data_text
-          data_text = File.read(File.expand_path(ENV['DATAFILE']))
-        end
-
-        JSON.parse(data_text, symbolize_names: true)
+        JSON.parse(ENV['DATA'] || '{}', symbolize_names: true) rescue {}
       end
     end
 
@@ -35,10 +30,7 @@ module Craftbelt
 
     def access
       @access ||= begin
-        # TODO remove when access policies are standard
-        data[:access] || {
-          whitelist: (data[:settings][:whitelist] || '').split
-        }
+        data[:access] || { blacklist: [] }
       end
     end
 
@@ -46,10 +38,16 @@ module Craftbelt
       !!access[:whitelist]
     end
 
+    def settings_raw
+      @settings_raw ||= begin
+        data[:settings] || {}
+      end
+    end
+
     def write_player_files
-      File.write('ops.txt', player_list(data[:settings][:ops]))
-      File.write('white-list.txt', player_list(access[:whitelist] || ''))
-      File.write('banned-players.txt', player_list(access[:blacklist] || ''))
+      File.write('ops.txt', player_list(settings_raw[:ops])) if settings_raw[:ops]
+      File.write('white-list.txt', player_list(access[:whitelist])) if access[:whitelist]
+      File.write('banned-players.txt', player_list(access[:blacklist])) if access[:blacklist]
     end
 
     def write_templates(templates)
